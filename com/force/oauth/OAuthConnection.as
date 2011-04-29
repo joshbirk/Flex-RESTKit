@@ -7,10 +7,8 @@ package com.force.oauth
 	import flash.display.Stage;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
-	import flash.events.LocationChangeEvent;
 	import flash.geom.Rectangle;
 	import flash.html.HTMLLoader;
-	import flash.media.StageWebView;
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
@@ -28,8 +26,8 @@ package com.force.oauth
 		protected var redirectURI:String; 
 		protected var oauthURI:String = "https://login.salesforce.com";
 		
-		public var oauthView:HTMLLoader;
-		public var api:String = "21.0";
+		public var oauthView:DisplayObject;
+		
 		
 		protected var jsonStorage:SharedObject = SharedObject.getLocal("results");
 		protected var oauthToken:String;
@@ -76,17 +74,28 @@ package com.force.oauth
 				Stage.addChild(this.oauthView);
 			}
 			var url:URLRequest = new URLRequest(oauthURI+"/services/oauth2/authorize?display=touch&response_type=code&client_id="+publicKey+"&redirect_uri="+redirectURI);
-			this.oauthView.load(url);
+			HTMLLoader(this.oauthView).load(url);
 		}
 		
 		public function removeBrowser():void {
 			if(this.oauthView != null && this.oauthView.parent != null) {
-					this.oauthView.parent.removeChild(this.oauthView);
+				this.oauthView.parent.removeChild(this.oauthView);
 			}
 		}
 		
 		public function get tokenResult():Object {
 			return JSON.deserialize(jsonStorage.data.jsonResult);
+		}
+		
+		public function set tokenResult(result:Object):void {
+			var refresh_token:String;
+			if(tokenResult.refresh_token != null) { 
+				refresh_token = tokenResult.refresh_token;
+			}
+			if(refresh_token != null) {
+				result.refresh_token = refresh_token;
+			}
+			jsonStorage.data.jsonResult = JSON.serialize(result);
 		}
 		
 		public static function SOAPLoginRequest():Object {
@@ -98,11 +107,11 @@ package com.force.oauth
 				
 				var lr:Object = {
 					session_id : tokenResult.access_token,
-					server_url : 'https://c.'+pod+'.visual.force.com/services/Soap/u/21.0/'+orgId
+						server_url : 'https://c.'+pod+'.visual.force.com/services/Soap/u/21.0/'+orgId
 				};
-					
+				
 				return lr;
-					
+				
 			}
 			
 			return null;
@@ -126,11 +135,11 @@ package com.force.oauth
 		}
 		
 		protected function getToken(event:Event):void {
-			if(this.oauthView.location.indexOf("code=") < 0) {
+			if(HTMLLoader(oauthView).location.indexOf("code=") < 0) {
 				return;
 			}
 			
-			var requestToken:String = unescape(this.oauthView.location.substring(this.oauthView.location.indexOf("code=")+5, this.oauthView.location.length));
+			var requestToken:String = unescape(HTMLLoader(oauthView).location.substring(HTMLLoader(oauthView).location.indexOf("code=")+5, HTMLLoader(oauthView).location.length));
 			removeBrowser();			
 			
 			getAccessToken(requestToken);
@@ -184,10 +193,11 @@ package com.force.oauth
 			
 			trace("JSON Response::"+event.result.toString());
 			json = JSON.deserialize(event.result.toString());
+			trace("JSON Token::"+json.access_token);
 			if(tokenResult == null) {jsonStorage.data.jsonResult = event.result.toString();}
 			else {
-				tokenResult.access_token = json.access_token;
-				jsonStorage.data.jsonResult = JSON.serialize(tokenResult);
+				tokenResult = json;
+				trace("TokenResult Access Token Updated::"+tokenResult.access_token);
 			}
 			if(json == null) {
 				clearAccess();
