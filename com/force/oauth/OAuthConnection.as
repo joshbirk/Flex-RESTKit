@@ -23,9 +23,9 @@ package com.force.oauth
 	
 	public class OAuthConnection
 	{
-		protected var publicKey:String; // = "3MVG9Km_cBLhsuPw4bEHyKjC0xIjmiOfiVPNKrEJ_ccv5b5tquttc.cs8yprB.kXFKihALHWwsqL4vFl4PF2Q";
-		protected var privateKey:String;// = "6863711482039949213";
-		protected var redirectURI:String; // = "https://127.0.0.1/";
+		protected var publicKey:String; 
+		protected var privateKey:String;
+		protected var redirectURI:String; 
 		protected var oauthURI:String = "https://login.salesforce.com";
 		
 		public var oauthView:HTMLLoader;
