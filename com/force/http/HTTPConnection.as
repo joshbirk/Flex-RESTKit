@@ -21,6 +21,7 @@ package com.force.http
 		public static function send(headers:Object, method:String, uri:String, callback:IResponder, isBinary:Boolean = false, postObject:Object = null, isSoap:Boolean = false):void {
 			var http:HTTPService = new HTTPService();
 			http.method = method;
+			trace(http.method);
 			http.headers = headers;
 			http.url = uri;
 			

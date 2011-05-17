@@ -6,6 +6,8 @@ package com.force.http.rest
 	import com.force.oauth.OAuthConnection;
 	import com.force.utility.JSON;
 	
+	import flash.net.URLRequestMethod;
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.UIComponent;
 	import mx.messaging.ChannelSet;
@@ -199,6 +201,33 @@ package com.force.http.rest
 			var httpCallback:IResponder = new mx.rpc.Responder(response.resultHandler,response.faultHandler);
 			HTTPConnection.send(headers,method,url,httpCallback);
 			trace("Query sent");
+		}
+		
+		
+		/* Currently not supported by the Flash Player, requires  */
+		public function deleteObjectById(type:String, id:String, _callback:IResponder):void {
+			if(tokenExpired()) {
+				pendingRequests.addItem(new RESTRequest("getObjectById",[type,id,_callback]));
+				trace("sending new request");
+				if(pendingRequests.length == 1) {
+					refreshOAuth();
+				}
+				return;
+			}
+			
+			var headers:Object = new Object();
+			var method:String = "GET";
+			
+			headers = new Object();
+			headers["Authorization"] = "OAuth "+oauth.access_token;
+			headers["X-HTTP-Method-Override"] = URLRequestMethod.DELETE;
+			headers["Accept"] = "application/jsonrequest";
+			var url:String = oauth.instance_url + "/services/data/v"+api+"/sobjects/"+type+"/"+id;
+			
+			var response:RESTResponse = new RESTResponse(_callback);
+			var httpCallback:IResponder = new mx.rpc.Responder(response.resultHandler,response.faultHandler);
+			HTTPConnection.send(headers,method,url	,httpCallback);
+			trace("Delete sent");
 		}
 		
 		

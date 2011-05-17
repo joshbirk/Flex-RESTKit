@@ -39,7 +39,7 @@ package com.force.http.rest
 						}
 						
 						result = JSON.deserialize(event.result.toString()); //probably JSON, let's pull the records into a JSON object and send bac
-						result = result.records;
+						if(result.records != null) {result = result.records;}
 						this.callback.result(result);
 				}
 			} catch(e:Error) {

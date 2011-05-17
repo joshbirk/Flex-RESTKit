@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   
+					   >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.force.http.rest.RESTConnection;
+			import com.force.oauth.OAuthConnection;
+			import com.force.utility.util;
+			
+			import mx.collections.ArrayCollection;
+			import mx.rpc.AsyncResponder;
+			import mx.utils.ObjectUtil;
+			
+			private var rest:RESTConnection;
+			
+			private function init():void {
+				if(this.stage != null) {
+					login();
+				}
+			}
+			
+			private function login():void {
+				trace("Login");
+				rest = new RESTConnection();
+				
+				rest.oauthConnection = new OAuthConnection("3MVG9Km_cBLhsuPw4bEHyKjC0xIjmiOfiVPNKrEJ_ccv5b5tquttc.cs8yprB.kXFKihALHWwsqL4vFl4PF2Q","6863711482039949213","https://127.0.0.1/");
+				rest.oauthConnection.login(this.stage,new mx.rpc.AsyncResponder(loginHandler,com.force.utility.util.genericError));
+				
+			}
+			
+			private function loginHandler(loginResult:Object, token:Object):void {
+				rest.oauth = loginResult;
+				rest.query("SELECT ID, Name from Contact LIMIT 5",new mx.rpc.AsyncResponder(queryHandler,com.force.utility.util.genericError));
+			}
+			
+			private function queryHandler(queryResult:Array, token:Object):void {
+				resultGrid.dataProvider = new ArrayCollection(queryResult);
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:Button x="10" y="10" label="Login" creationComplete="init()" click="login()"/>
+	<s:DataGrid x="30" y="68" width="584" height="253" requestedRowCount="4" id="resultGrid">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="Name" headerText="Name" width="350"></s:GridColumn>
+				<s:GridColumn dataField="Email" headerText="Email" ></s:GridColumn>
+				<s:GridColumn dataField="Phone" headerText="Phone" ></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+</s:WindowedApplication>
