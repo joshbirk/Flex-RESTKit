@@ -100,5 +100,19 @@ rest.create(oldContact,"Contact",new AsyncResponder(com.force.utility.util.gener
 
 <B>Deleting data</B>
 <P>
-Currently, Flex does not support the DELETE protocol.  However, using third party libraries you can include this functionality in your project.  The code for this will be added shortly.
+Since Flex does not natively support the DELETE HTTP method, the library needs to use some third party tools to create a proper delete request for the REST API.  To do this, you need to install the following libraries:
+<UL>
+ <LI>as3httpclientlib @ <a href="http://code.google.com/p/as3httpclientlib/">code.google</a></LI>
+ <LI>as3corelib @ <a href="https://github.com/mikechambers/as3corelib">github</a></LI>
+ <LI>as3crypto @ <a href="http://code.google.com/p/as3crypto/">code.google</a></LI>
+</UL>
+
+The delete request also works differently to distinct this portion of the code the rest of the library that doesn't require the above libraries.  To perform a delete request, first create a DeleteRequest object and pass in your RESTConnection:
+
+<PRE>var delReq:DeleteRequest = new DeleteRequest(rest);</PRE>
+
+After that, the DeleteRequest behaves in a similar manner as the rest of the library:
+
+<PRE>delReq.deleteObject(resultGrid.selectedItem.Id,"Contact",new AsyncResponder(refreshData,com.force.utility.util.genericError));</PRE>		
+
 </P>
