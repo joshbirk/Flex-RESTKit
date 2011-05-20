@@ -1,5 +1,6 @@
 package com.force.oauth.mobile
 {
+	import com.force.oauth.OAuthConnection;
 	import com.force.utility.JSON;
 	
 	import flash.display.Stage;
@@ -16,10 +17,17 @@ package com.force.oauth.mobile
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 	import mx.utils.ObjectUtil;
-	import com.force.oauth.OAuthConnection;
+	
+	
 	
 	public class OAuthConnectionMobile extends OAuthConnection
 	{
+		private var oauthView:StageWebView;
+		
+		public function OAuthConnectionMobile(_publicKey:String, _privateKey:String, _redirectURI:String) {
+			super(_publicKey, _privateKey, _redirectURI);
+			
+		}
 		
 		public override function login(Stage:flash.display.Stage = null, responder:IResponder = null, refresh:Boolean = false):void {
 			this.callback = responder;

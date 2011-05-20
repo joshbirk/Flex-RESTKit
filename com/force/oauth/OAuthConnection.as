@@ -26,7 +26,7 @@ package com.force.oauth
 		protected var redirectURI:String; 
 		protected var oauthURI:String = "https://login.salesforce.com";
 		
-		public var oauthView:DisplayObject;
+		private var oauthView:DisplayObject;
 		
 		
 		protected var jsonStorage:SharedObject = SharedObject.getLocal("results");
@@ -34,7 +34,7 @@ package com.force.oauth
 		
 		protected var callback:IResponder;
 		
-		public function OAuthConnection(_publicKey:String, _privateKey:String, _redirectURI:String):void {
+		public function OAuthConnection(_publicKey:String, _privateKey:String, _redirectURI:String) {
 			this.publicKey = _publicKey;
 			this.privateKey = _privateKey;
 			this.redirectURI = _redirectURI;
