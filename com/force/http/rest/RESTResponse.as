@@ -5,7 +5,7 @@ package com.force.http.rest
 	import mx.rpc.events.ResultEvent;
 	import mx.utils.ObjectUtil;
 	
-	import com.force.utility.JSON;
+	import com.adobe.serialization.json.JSON;
 	
 	public class RESTResponse
 	{
@@ -38,7 +38,7 @@ package com.force.http.rest
 							return;
 						}
 						
-						result = JSON.deserialize(event.result.toString()); //probably JSON, let's pull the records into a JSON object and send bac
+						result = JSON.decode(event.result.toString()); //probably JSON, let's pull the records into a JSON object and send bac
 						if(result.records != null) {result = result.records;}
 						this.callback.result(result);
 				}

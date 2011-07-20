@@ -55,6 +55,7 @@ package com.force.oauth.mobile
 			var rect:Rectangle = new Rectangle(Stage.width/2 - 240,Stage.height/2 - 240,480,480);
 			if(this.oauthView == null) {
 				this.oauthView = new StageWebView();
+				this.oauthView.addEventListener(Event.LOCATION_CHANGE,getToken);
 				this.oauthView.addEventListener(ErrorEvent.ERROR,getToken);
 				StageWebView(this.oauthView).stage = Stage;
 				StageWebView(this.oauthView).viewPort = rect;
@@ -69,6 +70,7 @@ package com.force.oauth.mobile
 		}
 		
 		protected override function getToken(event:Event):void {
+			trace(StageWebView(oauthView).location);
 			if(StageWebView(oauthView).location.indexOf("code=") < 0) {
 				return;
 			}
