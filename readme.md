@@ -1,6 +1,13 @@
 <h1>Overview:</h1>
 The Flex-RESTkit allows for OAuth authentication and REST callouts to the Force.com platform.
 
+<P>
+<B>Warning:</B> Due to issues with the Adobe Flash Player, the REST API is essentially unavailable when embedding Flex into Visualforce.  This is because it strips out the Auth header and also ignores some of the basic REST HTTP actions.  Everything works as expected under AIR.
+
+<BR /><BR />	
+Also, due to Adobe's lack of official support for Flex - this project will probably not be updated.
+</P>	
+
 <H1>OAuth: Basic Usage</H1>
 The OAuthConnection class will use the public key, private key and callback URL to direct the user through a dynamically generated web browser and hold the appropriate tokens in local storage for authentication.  It can also use the refresh token to maintain a persisten authentication, which the RESTConnection class utilizes by default.
 
